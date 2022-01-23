@@ -8,7 +8,7 @@ const questions = [
         type: 'list',
         name: 'action',
         message: 'What would you like to do?',
-        choices: ['View all departments','View all roles', 'View all employees', 'Add a department', 'Add a role', 'Add an employee', 'Update an employee role']
+        choices: ['View all departments','View all roles', 'View all employees', 'Add a department', 'Add a role', 'Add an employee', 'Update an employee role', 'Exit']
     }
 ];
 
@@ -149,6 +149,10 @@ const init = () => {
         }
         else if(data.action === 'Update an employee role'){
             updateEmployeeRole();
+        }
+        else if(data.action === 'Exit'){
+            console.log('Bye.');
+            return;
         }
     })
 }
