@@ -1,7 +1,17 @@
 const inquirer = require('inquirer');
-const db = require('mysql2');
+const mysql = require('mysql2');
 const table = require('console.table');
 const { allowedNodeEnvironmentFlags } = require('process');
+
+const db = mysql.createConnection({
+  host: 'localhost',
+  // Your MySQL username,
+  user: 'root',
+  // Your MySQL password
+  password: 'MySQL27!2021',
+  database: 'election'
+});
+
 
 const questions = [
     {
