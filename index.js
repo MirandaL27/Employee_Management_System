@@ -33,17 +33,17 @@ const viewAllDepartments = () => {
 }
 
 const viewAllRoles = () => {
-    //use the db to run a sql query
-    //usd console.table to print the results of the query
-    //return promptUser
-    return init();
+    db.query('SELECT * FROM role').then(result => {
+        console.log(table.getTable(result[0]));
+    })
+    .then(init);
 }
 
 const viewAllEmpoyees = () => {
-    //use the db to run a sql query
-    //usd console.table to print the results of the query
-    //return promptUser
-    return init();
+    db.query('SELECT * FROM employee').then(result => {
+        console.log(table.getTable(result[0]));
+    })
+    .then(init);
 }
 
 const addDepartment = () => {
@@ -162,6 +162,7 @@ const init = () => {
             console.log('Bye.');
             return;
         }
+        
     })
 }
 
