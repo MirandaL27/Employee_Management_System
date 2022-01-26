@@ -26,24 +26,28 @@ const promptUser = () => {
 }
 
 const viewAllDepartments = () => { 
-    db.query('SELECT * FROM department').then(result => {
+   db.query('SELECT * FROM department')
+   .then(result => {
         console.log(table.getTable(result[0]));
     })
     .then(init);
 }
 
 const viewAllRoles = () => {
-    db.query('SELECT * FROM role').then(result => {
+    db.query('SELECT * FROM role')
+    .then(result => {
         console.log(table.getTable(result[0]));
     })
     .then(init);
 }
 
 const viewAllEmpoyees = () => {
-    db.query('SELECT * FROM employee').then(result => {
+    db.query('SELECT * FROM employee')
+    .then(result => {
         console.log(table.getTable(result[0]));
     })
     .then(init);
+
 }
 
 const addDepartment = () => {
@@ -56,7 +60,11 @@ const addDepartment = () => {
     ])
     .then(data => {
         //make a query that adds the department here!
-        return init();
+        db.query(`INSERT INTO department (name) VALUES ('${data.depName}')`)
+        .then(result => {
+            console.log(table.getTable(result[0]));
+        })
+        .then(init);
     })
 
 }
@@ -76,13 +84,20 @@ const addRole = () => {
         {
             type: 'input',
             name: 'roleDep',
-            message: 'What is the department of this role?'
+            message: 'What is the department name for this role?'
 
         }
     ])
     .then(data => {
         //make a query that adds the role here!
-        return init();
+        const sql = 'INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)';
+        db.query(`SELECT id FROM department WHERE name = '${data.roleDep}'`)
+        //console.log(depId);        
+        .then(result => {
+            console.log(result[2]);
+            const params = [data.roleName, data.roleSalary, result[2]];
+            db.query(sql, params)})
+            .then(init);
     });
 }
 
@@ -102,7 +117,7 @@ const addEmployee = () =>{
         {
             type: 'input',
             name: 'empRole',
-            message: 'What is the role of this employee?'
+            message: 'What is the role name for this employee?'
         },
         {
             type: 'input',
@@ -118,51 +133,84 @@ const addEmployee = () =>{
 
 const updateEmployeeRole = () => {
     //make choices array by using a sql query here!
-    let choices = [];
-    return inquirer.prompt([
-        {
-            type: 'list',
-            name: 'employee',
-            message: 'Select an employee to update:',
-            choices: choices
-        }
-    ])
-    .then(data => {
-        //make a query that updates the employee role here!
-        return init();
+    db.query('SELECT id, first_name, last_name FROM employee')
+    .then(result => {
+        console.log("-------Employees-------");
+        console.log(table.getTable(result[0]));
+        return;
     })
-
+    .then(result => {
+        db.query('SELECT title FROM role')
+        .then(result => {
+            console.log("-------Roles-------");
+            console.log(table.getTable(result[0]));
+            return;
+        });
+        return;
+    })
+    .then(result => {
+        return inquirer.prompt([
+            {
+                type: 'input',
+                name: 'employee',
+                message: 'Select an employee to update by entering their name:',
+            },
+            {
+                type : 'input',
+                name: 'newRole',
+                message: 'Select a new role for the employee:'
+            }
+        ])
+        .then(data => {
+            //make a query that updates the employee role here!
+            let employeeName = data.employee.split(" ");
+            let sql = 'UPDATE employee SET role_id = ? WHERE first_name = ? AND last_name = ?'
+            let params = [data.newRole,employeeName[0], employeeName[1]];
+            db.query(sql, params)
+            .then(init);
+        });
+    });    
 }
 
 const init = () => {
     promptUser()
     .then((data) => {
         if(data.action === "View all departments"){
-            viewAllDepartments();
+            console.log('View all departments.');
+            return viewAllDepartments();
         }
         else if(data.action === "View all roles"){
-            viewAllRoles();
+            console.log('View all roles');
+            return viewAllRoles();
         }
         else if(data.action === 'View all employees'){
-            viewAllEmpoyees();
+            console.log('View all employees');
+            return viewAllEmpoyees();
         }
         else if(data.action === 'Add a department'){
-            addDepartment();
+            console.log('Add a department');
+            return addDepartment();
         }
         else if(data.action === 'Add a role'){
-            addRole();
+            console.log('Add a role');
+            return addRole();
         }
         else if(data.action === 'Add an employee'){
-            addEmployee();
+            console.log('Add an employee');
+            return addEmployee();
         }
         else if(data.action === 'Update an employee role'){
-            updateEmployeeRole();
+            console.log('Update an employee role');
+            return updateEmployeeRole();
         }
         else {
             console.log('Bye.');
             return;
         }
         
+    })
+    .catch(err => {
+        console.log(err);
     })
 }
 
