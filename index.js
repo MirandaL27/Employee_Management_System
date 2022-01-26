@@ -1,14 +1,14 @@
 const inquirer = require('inquirer');
-const mysql = require('mysql2');
+const db = require('mysql2-promise')();
 const table = require('console.table');
 
-const db = mysql.createConnection({
+db.configure({
   host: 'localhost',
   // Your MySQL username,
   user: 'root',
   // Your MySQL password
   password: 'MySQL27!2021',
-  database: 'election'
+  database: 'cms_employee'
 });
 
 
@@ -25,26 +25,25 @@ const promptUser = () => {
     return inquirer.prompt(questions);
 }
 
-const viewAllDepartments = () => {
-    //use the db to run a sql query
-    //use console.table to print the results of the query
-    //return promptUser.
-    //db.query();
-    return promptUser();
+const viewAllDepartments = () => { 
+    db.query('SELECT * FROM department').then(result => {
+        console.log(table.getTable(result[0]));
+    })
+    .then(init);
 }
 
 const viewAllRoles = () => {
     //use the db to run a sql query
     //usd console.table to print the results of the query
     //return promptUser
-    return promptUser();
+    return init();
 }
 
 const viewAllEmpoyees = () => {
     //use the db to run a sql query
     //usd console.table to print the results of the query
     //return promptUser
-    return promptUser();
+    return init();
 }
 
 const addDepartment = () => {
@@ -57,7 +56,7 @@ const addDepartment = () => {
     ])
     .then(data => {
         //make a query that adds the department here!
-        return promptUser();
+        return init();
     })
 
 }
@@ -83,7 +82,7 @@ const addRole = () => {
     ])
     .then(data => {
         //make a query that adds the role here!
-        return promptUser();
+        return init();
     });
 }
 
@@ -113,7 +112,7 @@ const addEmployee = () =>{
     ])
     .then(data => {
         //make a query that adds the employee here!
-        return promptUser();
+        return init();
     })
 }
 
@@ -130,7 +129,7 @@ const updateEmployeeRole = () => {
     ])
     .then(data => {
         //make a query that updates the employee role here!
-        return promptUser();
+        return init();
     })
 
 }
@@ -159,7 +158,7 @@ const init = () => {
         else if(data.action === 'Update an employee role'){
             updateEmployeeRole();
         }
-        else if(data.action === 'Exit'){
+        else {
             console.log('Bye.');
             return;
         }
