@@ -32,7 +32,7 @@ const viewAllDepartments = () => {
             return;
         }
         console.log(table.getTable(result));
-        return init();
+        return userChoices();
     });
 }
 const viewAllRoles = () => {
@@ -42,7 +42,7 @@ const viewAllRoles = () => {
             return;
         }
         console.log(table.getTable(result));
-        return init();
+        return userChoices();
     })
 }
 
@@ -53,7 +53,7 @@ const viewAllEmployees = () => {
             return;
         }
         console.log(table.getTable(result));
-        return init();
+        return userChoices();
     })
 }
 
@@ -73,7 +73,7 @@ const addDepartment = () => {
                 return;
             }
             console.log(table.getTable(result[0]));
-            return init();
+            return userChoices();
         })
     });    
 }
@@ -116,72 +116,57 @@ const addRole = () => {
                 console.log("Role successfully added.");
                 return;
             })
-            return init();
+            return userChoices();
         });
     })
 }
 
-// const addRole = () => {
-//     return inquirer.prompt([
-//         {
-//             type: 'input',
-//             name: 'roleName',
-//             message: 'What is the name of the role?'
-//         },
-//         {
-//             type: 'input',
-//             name: 'roleSalary',
-//             message: 'What is the salary for this role?'
-//         },
-//         {
-//             type: 'input',
-//             name: 'roleDep',
-//             message: 'What is the department name for this role?'
+const askEmployeeQuestions = (roleChoices) => {
+    return inquirer.prompt([
+        {
+//employee’s first name, last name, role, and manager
+            type: 'input',
+            name: 'empFirstName',
+            message: 'What is the first name of this employee?'
+        },
+        {
+            type: 'input',
+            name: 'empLastName',
+            message: 'What is the last name of this employee?'
+        },
+        {
+            type: 'list',
+            name: 'empRole',
+            message: 'What is the role name for this employee?',
+            choices: roleChoices
+        },
+        {
+            type: 'input',
+            name: 'empMan',
+            message: 'Who is the Manager of this employee?'
+        }
+    ])
+    .then(data => {
+        console.log(data);
+    })
+}
 
-//         }
-//     ])
-//     .then(data => {
-//         //make a query that adds the role here!
-//         const sql = 'INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)';
-//         db.query(`SELECT id FROM department WHERE name = '${data.roleDep}'`)
-//         //console.log(depId);        
-//         .then(result => {
-//             console.log(result[2]);
-//             const params = [data.roleName, data.roleSalary, result[2]];
-//             db.query(sql, params)})
-//             .then(init);
-//     });
-// }
-
-// const addEmployee = () =>{
-//     return inquirer.prompt([
-//         {
-// //employee’s first name, last name, role, and manager
-//             type: 'input',
-//             name: 'empFirstName',
-//             message: 'What is the first name of this employee?'
-//         },
-//         {
-//             type: 'input',
-//             name: 'empLastName',
-//             message: 'What is the last name of this employee?'
-//         },
-//         {
-//             type: 'input',
-//             name: 'empRole',
-//             message: 'What is the role name for this employee?'
-//         },
-//         {
-//             type: 'input',
-//             name: 'empMan',
-//             message: 'Who is the Manager of this employee?'
-//         }
-//     ])
-//     .then(data => {
-//         //make a query that adds the employee here!
-//         return init();
-//     })
-// }
+const addEmployee = () => {
+    db.query({sql:"SELECT title FROM role", rowsAsArray: true}, (err, result) => {
+        //console.log(result);
+        let test = [];
+        result.forEach(data => {
+            test.push(data[0]);
+        })
+        //console.log(test);
+        askEmployeeQuestions(test);
+    })
+    // .then(data => {
+    //     //make a query that adds the employee here!
+    //     const {empFirstName, empLastName, empRole, empMan} = data;
+    //     return userChoices();
+    // })
+}
 
 // const updateEmployeeRole = () => {
 //     //make choices array by using a sql query here!
@@ -227,43 +212,43 @@ const addRole = () => {
 //         let params = [result.id,employeeUpdateObj.first_name, employeeUpdateObj.last_name];
 //         return db.query(sql, params);       
 //     })
-//     .then(init);  
+//     .then(userChoices);  
 // }
 
-const init = () => {
+const userChoices = () => {
     promptUser()
     .then((data) => {
         if(data.action === "View all departments"){
-            console.log('View all departments.');
+            //console.log('View all departments.');
             return viewAllDepartments();
         }
         else if(data.action === "View all roles"){
-            console.log('View all roles');
+            //console.log('View all roles');
             return viewAllRoles();
         }
         else if(data.action === 'View all employees'){
-            console.log('View all employees');
+           // console.log('View all employees');
             return viewAllEmployees();
         }
         else if(data.action === 'Add a department'){
-            console.log('Add a department');
+            //console.log('Add a department');
             return addDepartment();
         }
         else if(data.action === 'Add a role'){
-            console.log('Add a role');
+            //console.log('Add a role');
             return addRole();
         }
         else if(data.action === 'Add an employee'){
-            console.log('Add an employee');
+            //console.log('Add an employee');
             return addEmployee();
         }
         else if(data.action === 'Update an employee role'){
-            console.log('Update an employee role');
+            //console.log('Update an employee role');
             return updateEmployeeRole();
         }
         else {
             console.log('Bye.');
-            return;
+            process.exit();
         }
         
     })
@@ -272,4 +257,4 @@ const init = () => {
     })
 }
 
-init();
+userChoices();
