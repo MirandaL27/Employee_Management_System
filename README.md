@@ -22,14 +22,14 @@ node index
 * mySQL
 
 # Screenshots/links
-[!screenshot of welcome screen for the ems app](screenshot.png)
+![screenshot of welcome screen for the ems app](screenshot.png)
 
 Github Repo: https://github.com/MirandaL27/Employee_Management_System
 
 # Walkthrough videos
 
-* [!video walkthrough of basic functionality of ems app](ems_functionality.gif)
-* [!video walkthrough of extra credit functionality of ems app](ems_extra_credit.gif)
+* [video walkthrough of basic functionality of ems app](ems_functionality.gif)
+* [video walkthrough of extra credit functionality of ems app](ems_extra_credit.gif)
 
 # Credits
 Miranda Lane
