@@ -14,9 +14,22 @@ node index
 * The user is continually prompted to take actions until they choose the exit option, at which point the program ends.
 * User input is validated and certain fields are required.
 
+# Technologies used
+* Node.js
+* Inquirer
+* Console.table
+* mysql2-promise
+* mySQL
+
 # Screenshots/links
+[!screenshot of welcome screen for the ems app](screenshot.png)
+
+Github Repo: https://github.com/MirandaL27/Employee_Management_System
 
 # Walkthrough videos
+
+* [!video walkthrough of basic functionality of ems app](ems_functionality.gif)
+* [!video walkthrough of extra credit functionality of ems app](ems_extra_credit.gif)
 
 # Credits
 Miranda Lane
